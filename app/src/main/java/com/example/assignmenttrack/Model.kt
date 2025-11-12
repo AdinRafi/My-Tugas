@@ -50,4 +50,13 @@ val TaskList = listOf(
         // Deadline: Tomorrow (Nov 13), 9:30 AM WITA
         deadline = createInstant(2025, Month.NOVEMBER, 13, 9, 30)
     ),
+    Task(
+        id = "4",
+        type = "Homework",
+        title = "OOP Homework",
+        description = "Defeat dewa babylonia",
+        status = false,
+        // Deadline: Tomorrow (Nov 13), 9:30 AM WITA
+        deadline = createInstant(2025, Month.NOVEMBER, 13, 9, 30)
+    ),
 )
