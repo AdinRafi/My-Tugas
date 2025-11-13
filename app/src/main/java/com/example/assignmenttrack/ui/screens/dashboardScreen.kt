@@ -25,7 +25,10 @@ import com.example.assignmenttrack.ui.components.ProfileSection
 import com.example.assignmenttrack.ui.components.TaskCard
 
 @Composable
-fun MainDashboard(modifier: Modifier = Modifier) {
+fun MainDashboard(
+    modifier: Modifier = Modifier,
+    onAddTaskClick: () -> Unit = {}
+) {
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -38,7 +41,8 @@ fun MainDashboard(modifier: Modifier = Modifier) {
         AddTask(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 8.dp)
+                .padding(bottom = 8.dp),
+            onClick = onAddTaskClick
         )
     }
 }

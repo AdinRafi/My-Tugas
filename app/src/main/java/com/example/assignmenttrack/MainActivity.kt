@@ -48,6 +48,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.assignmenttrack.data.Task
 import com.example.assignmenttrack.data.TaskList
+import com.example.assignmenttrack.ui.navigation.AppNavigation
 import com.example.assignmenttrack.ui.screens.MainDashboard
 import com.example.assignmenttrack.ui.theme.AssignmentTrackTheme
 
@@ -58,11 +59,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AssignmentTrackTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainDashboard(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                AppNavigation()
             }
         }
     }
@@ -72,6 +69,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     AssignmentTrackTheme {
-
+        MainDashboard(modifier = Modifier)
     }
 }

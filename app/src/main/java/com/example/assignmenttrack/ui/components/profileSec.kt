@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
@@ -30,8 +31,9 @@ fun ProfileSection(name: String) {
     Row (
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(0.1f)
-            .background(color = Color.White),
+            .fillMaxHeight(0.12f)
+            .background(color = Color.White)
+            .padding(top = 10.dp),
         Arrangement.SpaceBetween
     ){
         // bagian buat show profile pict
@@ -42,6 +44,7 @@ fun ProfileSection(name: String) {
         ) {
             Image(
                 modifier = Modifier
+                    .fillMaxHeight(0.98f)
                     .padding(all = 8.dp)
                     .clip(shape = CircleShape)
                     .border(width = 1.dp, color = Color.Black, shape = CircleShape),
@@ -64,9 +67,14 @@ fun ProfileSection(name: String) {
                 .padding(16.dp)
                 .clip(shape = CircleShape)
                 .background(Color(0xFF2260FF))
+                .size(42.dp)
                 .align(Alignment.CenterVertically)
         ){
-            Icon(imageVector = Icons.Default.Settings, contentDescription = "Settings")
+            Icon(
+                imageVector = Icons.Default.Settings,
+                contentDescription = "Settings",
+                tint = Color.White
+            )
         }
     }
 }

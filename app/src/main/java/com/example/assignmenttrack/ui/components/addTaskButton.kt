@@ -11,9 +11,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AddTask(modifier: Modifier = Modifier){
+fun AddTask(modifier: Modifier = Modifier, onClick: () -> Unit){
     Button(
-        onClick = {/* handle click */},
+        onClick = onClick,
         modifier = modifier
             .padding(bottom = 24.dp)
             .size(width = 220.dp, height = 40.dp),
