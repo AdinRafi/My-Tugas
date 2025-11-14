@@ -28,7 +28,7 @@ val TaskList = listOf(
         description = "Learn how to build UI with Jetpack Compose",
         status = false,
         // Deadline: Today (Nov 12), 10:00 PM WITA
-        deadline = createInstant(2025, Month.NOVEMBER, 12, 22, 0)
+        deadline = createInstant(2025, Month.NOVEMBER, 12, 22, 30)
     ),
     Task(
         id = "2",
@@ -37,7 +37,7 @@ val TaskList = listOf(
         description = "Finish before 6 PM",
         status = false,
         // Deadline: Today (Nov 12), 6:00 PM WITA
-        deadline = createInstant(2025, Month.NOVEMBER, 12, 18, 0)
+        deadline = createInstant(2025, Month.NOVEMBER, 12, 18, 27)
     ),
     Task(
         id = "3",
@@ -46,7 +46,7 @@ val TaskList = listOf(
         description = "Review the CNN architecture paper",
         status = false,
         // Deadline: Tomorrow (Nov 13), 9:30 AM WITA
-        deadline = createInstant(2025, Month.NOVEMBER, 13, 9, 30)
+        deadline = createInstant(2025, Month.NOVEMBER, 13, 9, 32)
     ),
     Task(
         id = "4",
@@ -55,6 +55,6 @@ val TaskList = listOf(
         description = "Defeat dewa babylonia",
         status = false,
         // Deadline: Tomorrow (Nov 13), 9:30 AM WITA
-        deadline = createInstant(2025, Month.NOVEMBER, 13, 9, 30)
+        deadline = createInstant(2025, Month.NOVEMBER, 13, 9, 21)
     ),
 )

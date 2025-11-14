@@ -3,6 +3,7 @@ package com.example.assignmenttrack.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,8 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.assignmenttrack.R
+import com.example.assignmenttrack.ui.theme.leagueSpartan
 
 // Profil (bagian atas di dashboard)
 @Composable
@@ -55,11 +58,24 @@ fun ProfileSection(name: String) {
                     contentDescription = ("User Profile"),
                 )
 
-                Text(
-                    text = "Halo, $name",
-                    color = Color.Black, style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(start = 8.dp)
-                )
+                Column {
+                    Text(
+                        text = "Halo!",
+                        color = Color.Black, style = MaterialTheme.typography.titleMedium,
+                        fontFamily = leagueSpartan,
+                        fontWeight = FontWeight.Normal,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+
+                    Text(
+                        text = name,
+                        color = Color.Black, style = MaterialTheme.typography.titleLarge,
+                        fontFamily = leagueSpartan,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+
             }
 
 
@@ -73,12 +89,14 @@ fun ProfileSection(name: String) {
                 Surface(
                     modifier = Modifier.size(42.dp),
                     shape = CircleShape,
-                    color = Color(0xFF2260FF)
+                    color = Color(0xFFCAD6FF)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Settings,
                         contentDescription = "Settings",
-                        tint = Color.White
+                        tint = Color.Gray,
+                        modifier = Modifier
+                                .padding(8.dp)
                     )
                 }
             }

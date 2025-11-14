@@ -38,7 +38,7 @@ fun MainDashboard(
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
-                ProfileSection(name = "Faiz")
+                ProfileSection(name = "Jock Owy")
                 TaskListScreen()
             }
             GeneralSubmitButton(

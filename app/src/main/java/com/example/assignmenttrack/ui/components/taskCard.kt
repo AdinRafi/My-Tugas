@@ -25,21 +25,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.assignmenttrack.data.Task
+import com.example.assignmenttrack.ui.theme.leagueSpartan
+import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalQueries.localDate
 
 // single card task
 @Composable
 fun TaskCard(task: Task) {
-    // Define a formatter for the deadline
-    val formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy")
+    val formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy - hh:mm a")
+        .withZone(ZoneId.systemDefault())
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp)), // Apply clip to the Card itself for proper shadow rendering
+            .clip(RoundedCornerShape(20.dp)),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(6.dp)
     ) {
@@ -56,16 +61,18 @@ fun TaskCard(task: Task) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = task.deadline.toString(),
+                    text = task.deadline
+                        .atZone(ZoneId.systemDefault())
+                        .format(formatter),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier
                         .padding(start = 4.dp),
                     color = Color(0xFF2260FF),
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.Medium,
                 )
 
                 IconButton(
-                    onClick = { /* Handle delete action */ }
+                    onClick = { /* TODO: Handle popup action */ }
                 ) {
                     Icon(imageVector = Icons.Default.MoreVert, contentDescription = "More", tint = Color.Gray)
                 }
@@ -90,14 +97,16 @@ fun TaskCard(task: Task) {
 
                         Text(
                             text = task.type,
-                            style = MaterialTheme.typography.titleLarge,
-                            color = Color(0xFF2260FF)
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = Color(0xFF2260FF),
+                            fontWeight = FontWeight.SemiBold,
+                            fontFamily = leagueSpartan
                         )
                         Row(
                             horizontalArrangement = Arrangement.spacedBy((-8).dp)
                         ) {
                             IconButton(
-                                onClick = { /* Handle delete action */ }
+                                onClick = { /*TODO: Handle delete action */ }
 
                             ) {
                                 Surface(
@@ -115,7 +124,7 @@ fun TaskCard(task: Task) {
                             }
 
                             IconButton(
-                                onClick = { /* Handle delete action */ }
+                                onClick = { /*TODO: Handle delete action */ }
 
                             ) {
                                 Surface(
@@ -139,15 +148,19 @@ fun TaskCard(task: Task) {
                     Text(
                         text = task.title,
                         style = MaterialTheme.typography.titleMedium,
-                        color = Color.Black
+                        color = Color.Black,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = leagueSpartan,
                     )
 
                     Spacer(Modifier.height(8.dp))
 
                     Text(
                         text = task.description,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.Black
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Normal,
+                        fontFamily = leagueSpartan
                     )
                 }
             }

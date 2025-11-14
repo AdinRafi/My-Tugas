@@ -28,7 +28,6 @@ fun AddTaskScreen() {
                 .padding(top = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Calendar()
             TaskForm()
         }
     }

@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.assignmenttrack.ui.theme.leagueSpartan
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -40,7 +41,11 @@ fun FormField1(
     modifier: Modifier = Modifier // Always default the modifier
 ) {
     Column {
-        Text(title)
+        Text(
+            title,
+            fontFamily = leagueSpartan,
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
 
         TextField(
             value = value,
