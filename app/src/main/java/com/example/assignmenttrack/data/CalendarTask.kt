@@ -1,6 +1,6 @@
 package com.example.assignmenttrack.data
 
-data class calendarInput(
+data class CalendarTask(
     val day:Int,
-    val task:List<Task>
+    val task:List<Task>? = null
 )
