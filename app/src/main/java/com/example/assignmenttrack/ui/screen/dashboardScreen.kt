@@ -57,8 +57,6 @@ fun MainDashboard(
     }
 }
 
-
-
 // handle showing list of card task (emg nge lag pas masih debug)
 @Composable
 fun TaskListScreen(modifier: Modifier = Modifier, tasks: List<Task>) {

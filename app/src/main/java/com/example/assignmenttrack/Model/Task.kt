@@ -72,5 +72,36 @@ val TaskList = listOf(
         // Deadline: Tomorrow (Nov 13), 9:30 AM WITA
         deadline = createInstant(2025, Month.NOVEMBER, 15, 9, 21)
     ),
+    Task(
+        id = "6",
+        type = TaskType.Kerja,
+        title = "Gacha Haruka",
+        description = "Kumpul Originium",
+        status = false,
+        // Deadline: Tomorrow (Nov 13), 9:30 AM WITA
+        deadline = createInstant(2025, Month.NOVEMBER, 13, 9, 21)
+    ),
+    Task(
+        id = "7",
+        type = TaskType.Kerja,
+        title = "Gacha Cyrene",
+        description = "Kumpul Stellar Jade",
+        status = false,
+        // Deadline: Tomorrow (Nov 13), 9:30 AM WITA
+        deadline = createInstant(2025, Month.NOVEMBER, 13, 9, 21)
+    ),
+    Task(
+        id = "8",
+        type = TaskType.Belajar,
+        title = "Lihat Meta di HSR",
+        description = "Gacha tim meta",
+        status = false,
+        // Deadline: Tomorrow (Nov 13), 9:30 AM WITA
+        deadline = createInstant(2025, Month.DECEMBER, 1, 9, 21)
+    ),
 )
+
+
+
+
 

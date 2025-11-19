@@ -1,8 +1,8 @@
-package com.example.assignmenttrack.ui.components
+package com.example.assignmenttrack.ui.utils
 
 import com.example.assignmenttrack.Model.CalendarMonthData
-import java.time.YearMonth
 import java.time.LocalDate
+import java.time.YearMonth
 
 object CalendarUtils {
 
@@ -29,13 +29,13 @@ object CalendarUtils {
     }
 
     fun isToday(day: Int, month: Int, year: Int): Boolean {
-        val today = java.time.LocalDate.now()
+        val today = LocalDate.now()
         return  today.dayOfMonth == day &&
                 today.monthValue == month &&
                 today.year == year
     }
 
-    fun calculateMonthData(year: Int, month: Int): CalendarMonthData{
+    fun calculateMonthData(year: Int, month: Int): CalendarMonthData {
         val yearMonth = YearMonth.of(year, month)
         val daysInMonth = yearMonth.lengthOfMonth()
         val firstDayOfMonth = LocalDate.of(year, month, 1)

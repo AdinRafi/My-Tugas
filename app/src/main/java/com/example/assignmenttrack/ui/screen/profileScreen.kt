@@ -42,7 +42,6 @@ fun ProfileSection(nama: String, onBackClick: () -> Unit){
         modifier = Modifier
             .fillMaxSize(),
         color = Color.White
-        Alignment = TopCenter
     ){
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
