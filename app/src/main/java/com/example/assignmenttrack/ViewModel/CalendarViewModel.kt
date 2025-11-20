@@ -1,26 +1,25 @@
-package com.example.assignmenttrack.ViewModel
+package com.example.assignmenttrack.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.assignmenttrack.Model.CalendarTask
 import com.example.assignmenttrack.Model.Task
+import com.example.assignmenttrack.uiStateData.CalendarTask
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
-import java.time.ZoneId
-import com.example.assignmenttrack.Model.TaskList
+import java.time.LocalDate
 import java.time.Month
+import java.time.ZoneId
 
-class CalendarViewModel: ViewModel(){
+class CalendarViewModel(taskViewModel: TaskListViewModel): ViewModel(){
 
     // untuk tahun
-    private val _currentYear = MutableStateFlow(java.time.LocalDate.now().year)
+    private val _currentYear = MutableStateFlow(LocalDate.now().year)
     val currentYear: StateFlow<Int> = _currentYear.asStateFlow()
 
     // untuk bulan
-    private val _currentMonth = MutableStateFlow(java.time.LocalDate.now().monthValue)
+    private val _currentMonth = MutableStateFlow(LocalDate.now().monthValue)
     val currentMonth: StateFlow<Int> = _currentMonth.asStateFlow()
 
     // untuk tanggal yang dipilih
@@ -31,12 +30,20 @@ class CalendarViewModel: ViewModel(){
     private val _calendarTasks = MutableStateFlow<List<CalendarTask>>(emptyList())
     val calendarTasks: StateFlow<List<CalendarTask>> = _calendarTasks.asStateFlow()
 
+    private val _taskUiState = MutableStateFlow<List<Task>>(emptyList())
+    val taskUiState: StateFlow<List<Task>> = _taskUiState
+
     // Semua tugas di tanggal yang di pilih
     private val _selectedDateTasks = MutableStateFlow<List<Task>>(emptyList())
     val selectedDateTasks: StateFlow<List<Task>> = _selectedDateTasks.asStateFlow()
 
     init {
-        loadCalendarTasks()
+        viewModelScope.launch {
+            taskViewModel.taskState.collect { state ->
+                _taskUiState.value = state.tasks
+                loadCalendarTasks() // update kalender berdasarkan perubahan
+            }
+        }
     }
 
     fun onDayClick(day: Int, month: Int, year: Int) {
@@ -75,7 +82,7 @@ class CalendarViewModel: ViewModel(){
         val currentMonth = Month.of(_currentMonth.value)
         val currentYear = _currentYear.value
 
-        val filteredTasks = TaskList.filter { task -> // Masih Pakai TaskList
+        val filteredTasks = _taskUiState.value.filter { task ->
             val taskDate = task.deadline.atZone(ZoneId.systemDefault())
             taskDate.month == currentMonth && taskDate.year == currentYear
         }
