@@ -46,4 +46,9 @@ class TaskListViewModel: ViewModel(){
             )
         }
     }
+
+    fun completeTask(task: Task) {
+        deleteTask(task)
+        setTaskStatus(task)
+    }
 }

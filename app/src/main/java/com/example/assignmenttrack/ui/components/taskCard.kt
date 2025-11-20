@@ -110,7 +110,7 @@ fun TaskCard(task: Task, modifier: Modifier, taskListViewModel: TaskListViewMode
 
                         DropdownMenuItem(
                             text = { Text("Complete", color = Color(0xFF728FFC)) },
-                            onClick = { /* TODO: Handle complete */ },
+                            onClick = { taskListViewModel.completeTask(task) },
                             leadingIcon = {Icon(imageVector = Icons.Default.CheckCircle, tint = Color(0xFF456DEE), contentDescription = "Complete")}
                         )
 
