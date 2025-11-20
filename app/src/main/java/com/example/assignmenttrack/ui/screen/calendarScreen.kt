@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -29,11 +28,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.assignmenttrack.Model.Task
 import com.example.assignmenttrack.ui.components.Calendar
 import com.example.assignmenttrack.ui.components.TaskCard
 import com.example.assignmenttrack.ui.theme.leagueSpartan
-import com.example.assignmenttrack.ViewModel.CalendarViewModel
-import com.example.assignmenttrack.Model.Task
+import com.example.assignmenttrack.viewModel.CalendarViewModel
+import com.example.assignmenttrack.viewModel.TaskListViewModel
 
 @Composable
 fun CalendarRoute(){
@@ -101,9 +101,12 @@ fun CalendarScreen(
                         selectedDateTasks = selectedDateTasks
                     )
 
+                    val taskListViewModel: TaskListViewModel = viewModel()
+
                     TaskList(
                         modifier = Modifier,
-                        tasks = selectedDateTasks
+                        tasks = selectedDateTasks,
+                        taskListViewModel = taskListViewModel
                     )
 
                     Box(
@@ -152,14 +155,14 @@ fun CalendarScreenHeader(){
 }
 
 @Composable
-fun TaskList(modifier: Modifier = Modifier, tasks: List<Task>) {
+fun TaskList(modifier: Modifier = Modifier, tasks: List<Task>, taskListViewModel: TaskListViewModel) {
     LazyColumn(
         modifier = modifier
             .padding(horizontal = 16.dp),
         contentPadding = PaddingValues(top = 16.dp, bottom = 42.dp),
     ){
         items(items = tasks, key = { it.id }) { task ->
-            TaskCard(task, modifier = Modifier.fillMaxWidth())
+            TaskCard(task, modifier = Modifier.fillMaxWidth(), taskListViewModel =  taskListViewModel)
             Spacer(modifier = Modifier.height(16.dp))
         }
     }

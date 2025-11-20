@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.assignmenttrack.Model.defaultUser
+import com.example.assignmenttrack.uiStateData.defaultUser
 import com.example.assignmenttrack.ui.theme.leagueSpartan
 import kotlin.math.cos
 import kotlin.math.sin

@@ -1,4 +1,4 @@
-package com.example.assignmenttrack.Model
+package com.example.assignmenttrack.uiStateData
 
 data class CalendarMonthData(
     val daysInMonth: Int,

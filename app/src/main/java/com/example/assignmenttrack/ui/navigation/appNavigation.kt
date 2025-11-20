@@ -5,17 +5,18 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.assignmenttrack.Model.User
-import com.example.assignmenttrack.Model.defaultUser
+import com.example.assignmenttrack.uiStateData.defaultUser
 import com.example.assignmenttrack.ui.screen.MainDashboard
 import com.example.assignmenttrack.ui.screen.AddTaskScreen
 import com.example.assignmenttrack.ui.screen.CalendarRoute
 import com.example.assignmenttrack.ui.screen.ProfileSection
 import com.example.assignmenttrack.ui.screen.StatScreen
+import com.example.assignmenttrack.viewModel.TaskListViewModel
 
 // handle the type safety navigation between different screen.
 sealed class Screen(val route: String) {
@@ -31,7 +32,8 @@ sealed class Screen(val route: String) {
 
 // host the navigation graph and define the different screen.
 @Composable
-fun AppNavigation(navController: NavHostController = rememberNavController()) {
+fun AppNavigation(navController: NavHostController = rememberNavController() ) {
+    val taskListViewModel: TaskListViewModel = viewModel()
     NavHost(
         navController = navController,
         enterTransition = {
@@ -47,13 +49,15 @@ fun AppNavigation(navController: NavHostController = rememberNavController()) {
                 onAddTaskClick = { navController.navigate(Screen.AddTask.route) },
                 onProfileClick = { navController.navigate(Screen.Profile.route) },
                 onStatClick = { navController.navigate(Screen.Stat.route) },
-                onCalendarClick = { navController.navigate(Screen.Calendar.route) }
+                onCalendarClick = { navController.navigate(Screen.Calendar.route) },
+                taskListViewModel = taskListViewModel
             )
         }
 
         composable(Screen.AddTask.route){
             AddTaskScreen(
-                /*TODO: create a pop back*/
+                onTaskSubmit = { navController.navigate(Screen.Dashboard.route) },
+                taskListViewModel = taskListViewModel
             )
         }
 

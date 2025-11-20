@@ -32,7 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.assignmenttrack.Model.defaultUser
+import com.example.assignmenttrack.uiStateData.defaultUser
 import com.example.assignmenttrack.ui.components.FormField1
 import com.example.assignmenttrack.ui.theme.leagueSpartan
 

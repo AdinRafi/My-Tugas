@@ -35,6 +35,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.example.assignmenttrack.Model.Task
+import com.example.assignmenttrack.viewModel.TaskListViewModel
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -43,8 +45,8 @@ import java.time.ZoneId
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun TaskForm(modifier: Modifier = Modifier) {
-    var assignmentType by remember { mutableStateOf("") }
+fun TaskForm(modifier: Modifier = Modifier, taskListViewModel: TaskListViewModel, onTaskSubmit: () -> Unit) {
+    var assignmentType by remember { mutableStateOf(Task.TaskType.Belajar) }
     var assignmentTitle by remember { mutableStateOf("") }
     var assignmentDescription by remember { mutableStateOf("") }
 
@@ -60,11 +62,11 @@ fun TaskForm(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         item {
-            FormField1(
+            FormFieldDropdown(
                 title = "Assignment Type",
-                value = assignmentType,
-                onValueChange = { assignmentType = it },
                 titleFontWeight = FontWeight.Medium,
+                selectedType = assignmentType,
+                onTypeSelected = { assignmentType = it }
             )
         }
 
@@ -118,13 +120,23 @@ fun TaskForm(modifier: Modifier = Modifier) {
                     .fillMaxWidth(1f)
                     .padding(all = 16.dp),
                 text = "Tambah Tugas",
-                onClick = { /* TODO: Implement form submission logic */ }
+                onClick = {
+                    val newTask = Task(
+                        id = generateNewId(),
+                        type = assignmentType,
+                        title = assignmentTitle,
+                        description = assignmentDescription,
+                        status = false,
+                        deadline = selectedDateTime.atZone(ZoneId.systemDefault()).toInstant()
+                    )
+                    taskListViewModel.addTask(newTask)
+                    onTaskSubmit()
+                }
             )
         }
     }
 
 
-// Date Picker Dialog
     // Date Picker Dialog
     if (showDatePicker) {
         val datePickerState = rememberDatePickerState(
@@ -190,7 +202,7 @@ fun TaskForm(modifier: Modifier = Modifier) {
                                 handleColor = Color(0xFF3B82F6),
                                 backgroundColor = Color(0xFF3B82F6).copy(alpha = 0.4f)
                             )
-                    )
+                        )
                 )
             )
         }
@@ -255,4 +267,8 @@ fun TaskForm(modifier: Modifier = Modifier) {
             }
         }
     }
+}
+
+private fun generateNewId(): Int {
+    return (System.currentTimeMillis() % Int.MAX_VALUE).toInt()
 }
