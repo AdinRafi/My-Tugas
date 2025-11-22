@@ -59,7 +59,7 @@ fun ProfileSection(name: String, onProfileClick: () -> Unit, onStatClick: () -> 
                         .padding(all = 8.dp)
                         .clip(shape = CircleShape)
                         .border(width = 1.dp, color = Color.Black, shape = CircleShape),
-                    painter = painterResource(id = defaultUser.ProfilePictureId),
+                    painter = painterResource(id = defaultUser.profilePictureId),
                     contentDescription = ("User Profile"),
                 )
 

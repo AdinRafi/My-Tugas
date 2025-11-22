@@ -60,7 +60,7 @@ fun StatScreen(){
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Total Aktivitas: \n ${defaultUser.TaskTotal}",
+                        text = "Total Aktivitas: \n ${defaultUser.taskTotal}",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center,
@@ -86,9 +86,9 @@ fun StatScreen(){
 //                      Magic Slices
                         val slices = listOf(
 
-                            Slice(defaultUser.TaskCompleted.toFloat(), Color(0xFF64B5F6),"Completed"),
-                            Slice(defaultUser.TaskLate.toFloat(), Color(0xFFF06292),"Late"),
-                            Slice(defaultUser.TaskPending.toFloat(), Color(0xFF81C784),"OnGoing"),
+                            Slice(defaultUser.taskCompleted.toFloat(), Color(0xFF64B5F6),"Completed"),
+                            Slice(defaultUser.taskLate.toFloat(), Color(0xFFF06292),"Late"),
+                            Slice(defaultUser.taskPending.toFloat(), Color(0xFF81C784),"OnGoing"),
                         )
 
 
@@ -153,8 +153,8 @@ fun StatScreen(){
                     horizontalAlignment = Alignment.Start,
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    val completedTasks = defaultUser.TaskCompleted
-                    val lateTasks = defaultUser.TaskLate
+                    val completedTasks = defaultUser.taskCompleted
+                    val lateTasks = defaultUser.taskLate
                     val totalCompleted = completedTasks + lateTasks
                     val onTimePercentage = if (totalCompleted > 0) {
                         (completedTasks.toFloat() / totalCompleted.toFloat() * 100).toInt()
@@ -162,9 +162,9 @@ fun StatScreen(){
                         0
                     }
 
-                    val TotalBelajar = defaultUser.BelajarTotal
-                    val TotalTugas = defaultUser.TugasTotal
-                    val TotalKerja = defaultUser.KerjaTotal
+                    val TotalBelajar = defaultUser.belajarTotal
+                    val TotalTugas = defaultUser.tugasTotal
+                    val TotalKerja = defaultUser.kerjaTotal
 
 
                     StatCard(

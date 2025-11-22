@@ -5,13 +5,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class User(
     var name: String,
-    var ProfilePictureId: Int,
-    var TaskCompleted: Int,
-    var TaskLate: Int,
-    var TaskPending: Int,
-    var TaskTotal: Int = TaskCompleted + TaskLate + TaskPending,
+    var profilePictureId: Int,
+    var taskCompleted: Int,
+    var taskLate: Int,
+    var taskPending: Int,
+    var taskTotal: Int = taskCompleted + taskLate + taskPending,
 
-    var TugasTotal: Int,
-    var BelajarTotal: Int,
-    var KerjaTotal: Int,
+    var tugasTotal: Int,
+    var belajarTotal: Int,
+    var kerjaTotal: Int,
 )

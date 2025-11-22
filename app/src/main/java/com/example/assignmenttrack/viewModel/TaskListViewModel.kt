@@ -10,29 +10,29 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TaskListViewModel @Inject constructor(private val repository: TaskRepository) : ViewModel(){
+class TaskListViewModel @Inject constructor(private val db: TaskRepository) : ViewModel(){
 
     // Expose tasks dari repository
-    val tasks: Flow<List<Task>> = repository.getAllTasks()
+    val tasks: Flow<List<Task>> = db.getAllTasks()
 
     // Tambah task
     fun addTask(task: Task) {
         viewModelScope.launch {
-            repository.insertTask(task)
+            db.insertTask(task)
         }
     }
 
     // Hapus task
     fun deleteTask(taskId: Int) {
         viewModelScope.launch {
-            repository.deleteTask(taskId)
+            db.deleteTask(taskId)
         }
     }
 
     // Tandai task selesai
     fun completeTask(taskId: Int) {
         viewModelScope.launch {
-            repository.completeTask(taskId)
+            db.completeTask(taskId)
         }
     }
 }

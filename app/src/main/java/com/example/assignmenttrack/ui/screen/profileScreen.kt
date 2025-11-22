@@ -87,7 +87,7 @@ fun ProfileSection(nama: String, onBackClick: () -> Unit){
                         .width(150.dp)
                         .height(150.dp)
                         .clickable { /*TODO: Feature to change profile picture*/},
-                    painter = painterResource(id = defaultUser.ProfilePictureId),
+                    painter = painterResource(id = defaultUser.profilePictureId),
                     contentDescription = ("User Profile"),
                 )
 

@@ -5,11 +5,11 @@ import com.example.assignmenttrack.model.User
 
 val defaultUser = User(
     name = "User00",
-    ProfilePictureId = R.drawable.profile,
-    TaskCompleted = 3,
-    TaskPending = 2,
-    TaskLate = 1,
-    TugasTotal = 1,
-    BelajarTotal = 1,
-    KerjaTotal = 2
+    profilePictureId = R.drawable.profile,
+    taskCompleted = 3,
+    taskPending = 2,
+    taskLate = 1,
+    tugasTotal = 1,
+    belajarTotal = 1,
+    kerjaTotal = 2
 )
