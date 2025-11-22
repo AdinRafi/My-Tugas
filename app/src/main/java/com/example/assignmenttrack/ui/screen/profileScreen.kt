@@ -46,85 +46,85 @@ fun ProfileSection(nama: String, onBackClick: () -> Unit){
             .fillMaxSize(),
         color = Color.White
     ){
-            Column(
+        Column(
+            modifier = Modifier
+                .background(color = Color.White)
+                .padding(top = 16.dp)
+        ){
+            Box(
                 modifier = Modifier
-                    .background(color = Color.White)
-                    .padding(top = 16.dp)
+                    .padding(top = 32.dp)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
             ){
-                Box(
-                    modifier = Modifier
-                        .padding(top = 32.dp)
-                        .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ){
-                    IconButton(
-                        onClick = onBackClick,
-                        modifier = Modifier.align(Alignment.CenterStart)
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Balik",
-                            tint = Color(0xFF2260FF)
-                        )
-                    }
-                    Text(
-                        text = "My Profile",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = leagueSpartan,
-                        color = Color(0xFF2260FF),
-                        modifier = Modifier.align(Alignment.Center)
+                IconButton(
+                    onClick = onBackClick,
+                    modifier = Modifier.align(Alignment.CenterStart)
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Balik",
+                        tint = Color(0xFF2260FF)
                     )
                 }
-
-                Image(
-                    modifier = Modifier
-                        .clip(shape = CircleShape)
-                        .border(width = 1.dp, color = Color.Black, shape = CircleShape)
-                        .align(Alignment.CenterHorizontally)
-                        .width(200.dp)
-                        .height(200.dp)
-                        .clickable { /*TODO: Feature to change profile picture*/ },
-                    painter = painterResource(id = defaultUser.profilePictureId),
-                    contentDescription = ("User Profile"),
+                Text(
+                    text = "My Profile",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = leagueSpartan,
+                    color = Color(0xFF2260FF),
+                    modifier = Modifier.align(Alignment.Center)
                 )
+            }
 
-                Spacer(Modifier.height(8.dp))
+            Image(
+                modifier = Modifier
+                    .clip(shape = CircleShape)
+                    .border(width = 1.dp, color = Color.Black, shape = CircleShape)
+                    .align(Alignment.CenterHorizontally)
+                    .width(200.dp)
+                    .height(200.dp)
+                    .clickable { /*TODO: Feature to change profile picture*/ },
+                painter = painterResource(id = defaultUser.profilePictureId),
+                contentDescription = ("User Profile"),
+            )
 
-                Row (modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                    IconButton(
-                        onClick = { },
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                            .height(40.dp)
-                            .width(40.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = "Edit",
-                            tint = Color.Black,
-                        )
-                    }
+            Spacer(Modifier.height(8.dp))
 
-                    Text(
-                        text = nama,
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier
-                            .padding(top = 12.dp),
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = leagueSpartan,
+            Row (modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                IconButton(
+                    onClick = { },
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .height(40.dp)
+                        .width(40.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Edit",
+                        tint = Color.Black,
                     )
                 }
 
                 Text(
-                    text = "ini gak tau mau ditulis apaan, cmn bagian bawahnya kosong jadi isi aja sembarang, ini deskripsi pancasila pakai bahasa rusia: \n \n Панчасила – это основа индонезийского государства, основанная на пяти принципах: вера в Единого Всемогущего Бога; справедливое и цивилизованное человечество; единство Индонезии; демократия, основанная на мудрости совещательного и представительного подхода; и социальная справедливость для всех индонезийцев. Панчасила, слово, происходящее от санскрита и означающее «пять» (panca) и «принцип» (sila), служит моральным ориентиром и руководством для всех индонезийцев в их национальной и государственной жизни.",
-                    style = MaterialTheme.typography.bodyMedium,
+                    text = nama,
+                    style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier
-                        .padding(all =12.dp),
-                    fontWeight = FontWeight.Medium,
+                        .padding(top = 12.dp),
+                    fontWeight = FontWeight.SemiBold,
                     fontFamily = leagueSpartan,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Justify,
                 )
+            }
+
+            Text(
+                text = "ini gak tau mau ditulis apaan, cmn bagian bawahnya kosong jadi isi aja sembarang, ini deskripsi pancasila pakai bahasa rusia: \n \n Панчасила – это основа индонезийского государства, основанная на пяти принципах: вера в Единого Всемогущего Бога; справедливое и цивилизованное человечество; единство Индонезии; демократия, основанная на мудрости совещательного и представительного подхода; и социальная справедливость для всех индонезийцев. Панчасила, слово, происходящее от санскрита и означающее «пять» (panca) и «принцип» (sila), служит моральным ориентиром и руководством для всех индонезийцев в их национальной и государственной жизни.",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier
+                    .padding(all =12.dp),
+                fontWeight = FontWeight.Medium,
+                fontFamily = leagueSpartan,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Justify,
+            )
         }
     }
 }
