@@ -18,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class UserViewModel @Inject constructor
     (private val userRepository: UserRepository,
-     private val taskRepository: TaskRepository): ViewModel()
+     private val taskRepository: TaskRepository
+): ViewModel()
 {
     private val _user = MutableStateFlow<User>(defaultUser)
     val user: StateFlow<User> = _user
@@ -30,9 +31,10 @@ class UserViewModel @Inject constructor
     /*TODO: Update for Profile*/
     fun updateUser(){
         viewModelScope.launch {
-            combine (
+            combine(
                 userRepository.getUser(),
-                taskRepository.getAllTasks()) { userData, tasks ->
+                taskRepository.getAllTasks()
+            ) { userData, tasks ->
                 userData?.copy(
                     name = user.value.name,
                     profilePictureId = defaultUser.profilePictureId,
