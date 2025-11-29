@@ -13,7 +13,6 @@ import androidx.compose.material3.Surface
 import com.example.assignmenttrack.ui.components.StatCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,8 +27,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.assignmenttrack.uiStateData.defaultUser
 import com.example.assignmenttrack.ui.theme.leagueSpartan
+import com.example.assignmenttrack.viewModel.UserViewModel
 import kotlin.math.cos
 import kotlin.math.sin
 
