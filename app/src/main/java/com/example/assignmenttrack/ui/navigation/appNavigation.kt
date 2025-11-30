@@ -62,7 +62,6 @@ fun AppNavigation(navController: NavHostController, viewModel: TaskListViewModel
 
         composable(Screen.Profile.route){
             ProfileSection(
-                nama = defaultUser.name,
                 onBackClick = { navController.popBackStack() }
             )
         }

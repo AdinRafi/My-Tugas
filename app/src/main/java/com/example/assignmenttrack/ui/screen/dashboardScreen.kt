@@ -42,7 +42,7 @@ fun MainDashboard(
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
-                ProfileSection(name = defaultUser.name, onStatClick = onStatClick, onProfileClick = onProfileClick, onCalendarClick = onCalendarClick)
+                ProfileSection(onStatClick = onStatClick, onProfileClick = onProfileClick, onCalendarClick = onCalendarClick)
                 TaskListScreen(taskListViewModel)
             }
             GeneralSubmitButton(

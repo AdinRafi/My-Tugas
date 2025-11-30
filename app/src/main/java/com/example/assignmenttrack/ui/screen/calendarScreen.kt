@@ -58,10 +58,11 @@ fun CalendarScreen(
     viewModel: CalendarViewModel = hiltViewModel()
 ) {
     val calendarTasks by viewModel.calendarTasks.collectAsStateWithLifecycle()
-    val selectedDate by viewModel.selectedDate.collectAsStateWithLifecycle()
     val selectedDateTriple by viewModel.selectedDateTriple.collectAsStateWithLifecycle()
     val selectedDateTasks by viewModel.selectedDateTasks.collectAsStateWithLifecycle()
     val taskListViewModel: TaskListViewModel = hiltViewModel()
+    val selectedMonth by viewModel.selectedMonth.collectAsStateWithLifecycle()
+    val selectedYear by viewModel.selectedYear.collectAsStateWithLifecycle()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -79,15 +80,17 @@ fun CalendarScreen(
                         .fillMaxWidth()
                         .wrapContentWidth(Alignment.CenterHorizontally),
                     calendarInput = calendarTasks,
-                    year = selectedDate?.year ?: LocalDate.now().year,
-                    month = selectedDate?.monthValue ?: LocalDate.now().monthValue,
-                    onDayClick = { day, month, year ->
-                        val date = LocalDate.of(year, month, day)
+                    year = selectedYear,
+                    month = selectedMonth,
+                    onDayClick = { day, monthClicked, yearClicked ->
+                        if (monthClicked != selectedMonth || yearClicked != selectedYear) {
+                            viewModel.changeMonth(monthClicked, yearClicked)
+                        }
+                        val date = LocalDate.of(yearClicked, monthClicked, day)
                         viewModel.setSelectedDate(date)
                     },
                     onMonthChange = { newMonth, newYear ->
-                        val date = selectedDate ?: LocalDate.now()
-                        viewModel.setSelectedDate(LocalDate.of(newYear, newMonth, date.dayOfMonth))
+                        viewModel.changeMonth(newMonth, newYear)
                     }
                 )
 
@@ -104,7 +107,6 @@ fun CalendarScreen(
                         selectedDateTasks = selectedDateTasks
                     )
 
-                    val taskListViewModel: TaskListViewModel = viewModel() // kalau mau interaksi dengan TaskListViewModel
                     TaskList(
                         modifier = Modifier,
                         tasks = selectedDateTasks,

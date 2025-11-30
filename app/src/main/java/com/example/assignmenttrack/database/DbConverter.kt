@@ -4,7 +4,7 @@ import androidx.room.TypeConverter
 import com.example.assignmenttrack.model.Task
 import java.time.Instant
 
-class TaskConverter {
+class DbConverter {
     @TypeConverter
     fun fromInstant(instant: Instant?): Long? {
         return instant?.toEpochMilli()

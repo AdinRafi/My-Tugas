@@ -7,13 +7,5 @@ import androidx.room.PrimaryKey
 data class User(
     @PrimaryKey var id: Int = 1,
     var name: String,
-    var profilePictureId: Int,
-    var taskCompleted: Int,
-    var taskLate: Int,
-    var taskPending: Int,
-    var taskTotal: Int = taskCompleted + taskLate + taskPending,
-
-    var tugasTotal: Int,
-    var belajarTotal: Int,
-    var kerjaTotal: Int,
+    var profilePicturePath: String?,
 )

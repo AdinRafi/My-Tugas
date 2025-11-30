@@ -17,7 +17,7 @@ object ModuleRepository {
 
     @Provides
     @Singleton
-    fun provideUserRepository(userDao: UserDao): UserRepository{
-        return UserRepository(userDao)
+    fun provideUserRepository(userDao: UserDao, taskDao: TaskDao): UserRepository{
+        return UserRepository(userDao, taskDao)
     }
 }

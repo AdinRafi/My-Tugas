@@ -6,8 +6,8 @@ import androidx.room.TypeConverters
 import com.example.assignmenttrack.model.Task
 import com.example.assignmenttrack.model.User
 
-@Database(entities = [Task::class, User::class], version = 2, exportSchema = false)
-@TypeConverters(TaskConverter::class)
+@Database(entities = [Task::class, User::class], version = 1, exportSchema = false)
+@TypeConverters(DbConverter::class)
 abstract class TodoDatabase: RoomDatabase(){
 
     companion object{

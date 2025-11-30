@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.room.util.foreignKeyCheck
 import com.example.assignmenttrack.uiStateData.CalendarTask
 import com.example.assignmenttrack.ui.utils.CalendarUtils
 
@@ -81,7 +82,9 @@ fun Calendar(
                     CalendarDayCells(
                         day = day,
                         isCurrentMonth = false,
-                        hasTask = false,
+                        ongoing = false,
+                        complete = false,
+                        late = false,
                         isToday = false,
                         onClick = { onDayClick(day, prevMonth, prevYear) }
                     )
@@ -90,17 +93,16 @@ fun Calendar(
                 items(monthData.daysInMonth) { index -> // kotak-kotak bulan ini
                     val day = index + 1
                     val tasks = calendarInput.find { it.day == day }
-                    val hasTask = tasks?.tasks?.any { task ->
-                        when (task.status) {
-                            true -> false
-                            false, null -> true
-                        }
-                    } ?: false
+                    val ongoing = tasks?.tasks?.any { it.status == null } ?: false
+                    val complete = tasks?.tasks?.any { it.status == true } ?: false
+                    val late = tasks?.tasks?.any { it.status == false } ?: false
                     val isToday = CalendarUtils.isToday(day, month, year)
                     CalendarDayCells(
                         day = day,
                         isCurrentMonth = true,
-                        hasTask = hasTask,
+                        ongoing = ongoing,
+                        complete = complete,
+                        late = late,
                         isToday = isToday,
                         onClick = { onDayClick(day, month, year) }
                     )
@@ -113,7 +115,9 @@ fun Calendar(
                     CalendarDayCells(
                         day = day,
                         isCurrentMonth = false,
-                        hasTask = false,
+                        ongoing = false,
+                        complete = false,
+                        late = false,
                         isToday = false,
                         onClick = { onDayClick(day, nextMonth, nextYear) }
                     )
@@ -215,7 +219,9 @@ private fun CalendarDayCells(
     day: Int,
     isCurrentMonth: Boolean,
     isToday: Boolean,
-    hasTask: Boolean,
+    ongoing: Boolean,
+    complete: Boolean,
+    late: Boolean,
     onClick: () -> Unit
 ){
     Box(
@@ -230,7 +236,9 @@ private fun CalendarDayCells(
                 .clip(CircleShape)
                 .background(
                     when {
-                        hasTask -> Color(0xFF2260FF)
+                        ongoing -> Color(0xFF2260FF)
+                        complete -> Color(0xCC2260FF)
+                        late -> Color(0x802260FF)
                         isToday -> Color.White
                         else -> Color.Transparent
                     },
@@ -249,12 +257,14 @@ private fun CalendarDayCells(
                 text = day.toString(),
                 color = when {
                     !isCurrentMonth -> Color.LightGray
-                    hasTask -> Color.White
+                    ongoing -> Color.White
+                    complete -> Color.White
+                    late -> Color.White
                     isToday -> Color(0xFF2260FF)
                     else -> Color.Black
                 },
                 fontWeight = when {
-                    isToday || hasTask -> FontWeight.Bold
+                    isToday || ongoing || complete || late -> FontWeight.Bold
                     else -> FontWeight.Normal
                 },
                 fontSize = when {

@@ -7,12 +7,8 @@ import com.example.assignmenttrack.model.Task
 import com.example.assignmenttrack.uiStateData.CalendarTask
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.ZoneId
@@ -21,54 +17,69 @@ import javax.inject.Inject
 @HiltViewModel
 class CalendarViewModel @Inject constructor(private val repository: TaskRepository) : ViewModel() {
 
-    // StateFlow untuk tanggal yang dipilih
     private val _selectedDate = MutableStateFlow<LocalDate?>(null)
     val selectedDate: StateFlow<LocalDate?> = _selectedDate.asStateFlow()
 
-    // Ambil semua task dari repository
-    private val allTasks: StateFlow<List<Task>> = repository.getAllTasks()
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+    private val _selectedMonth = MutableStateFlow(LocalDate.now().monthValue)
+    val selectedMonth = _selectedMonth.asStateFlow()
 
-    val selectedDateTriple: StateFlow<Triple<Int, Int, Int>?> =
-        selectedDate.map { date ->
-            date?.let { Triple(it.dayOfMonth, it.monthValue, it.year) }
-        }.stateIn(viewModelScope, SharingStarted.Companion.Lazily, null)
+    private val _selectedYear = MutableStateFlow(LocalDate.now().year)
+    val selectedYear = _selectedYear.asStateFlow()
 
-    // CalendarTask: group tasks berdasarkan tanggal
-    val calendarTasks: StateFlow<List<CalendarTask>> =
-        allTasks.map { tasks ->
-            tasks.groupBy { it.deadline.atZone(ZoneId.systemDefault()).toLocalDate().dayOfMonth }
-                .map { (day, tasksForDay) ->
-                    CalendarTask(day = day, tasks = tasksForDay)
-                }
-        }.stateIn(viewModelScope, SharingStarted.Companion.Lazily, emptyList())
+    private val _selectedDateTriple = MutableStateFlow<Triple<Int, Int, Int>?>(null)
+    val selectedDateTriple: StateFlow<Triple<Int, Int, Int>?> = _selectedDateTriple.asStateFlow()
 
-    // Filter task berdasarkan tanggal yang dipilih
-    val selectedDateTasks: StateFlow<List<Task>> =
-        combine(allTasks, _selectedDate) { tasks, date ->
-            if (date == null) emptyList()
-            else tasks.filter {
-                val taskDate = it.deadline.atZone(ZoneId.systemDefault()).toLocalDate()
-                taskDate == date
-            }
-        }.stateIn(viewModelScope, SharingStarted.Companion.Lazily, emptyList())
+    private val _selectedDateTasks = MutableStateFlow<List<Task>>(emptyList())
+    val selectedDateTasks: StateFlow<List<Task>> = _selectedDateTasks.asStateFlow()
 
-    // Set tanggal yang dipilih di kalender
+    private val _calendarTasks = MutableStateFlow<List<CalendarTask>>(emptyList())
+    val calendarTasks: StateFlow<List<CalendarTask>> = _calendarTasks.asStateFlow()
+
+
+    init {
+        refreshCalendarTasks(
+            _selectedMonth.value,
+            _selectedYear.value)
+    }
     fun setSelectedDate(date: LocalDate) {
         _selectedDate.value = date
-    }
+        _selectedDateTriple.value = Triple(date.dayOfMonth, date.monthValue, date.year)
 
-    // Hapus task lewat repository
-    fun deleteTask(taskId: Int) {
+        val millis = date.atStartOfDay(ZoneId.systemDefault())
+            .toInstant().toEpochMilli()
+
         viewModelScope.launch {
-            repository.deleteTask(taskId)
+            repository.getTasksByDate(millis).collect { list ->
+                _selectedDateTasks.value = list
+            }
         }
     }
 
-    // Tandai task selesai lewat repository
-    fun completeTask(taskId: Int) {
+
+    fun refreshCalendarTasks(month: Int, year: Int) {
         viewModelScope.launch {
-            repository.completeTask(taskId)
+            repository.getTasksByMonth(month, year).collect { tasks ->
+
+                val grouped = tasks.groupBy {
+                    it.deadline.atZone(ZoneId.systemDefault())
+                        .toLocalDate().dayOfMonth
+                }.map { (day, tasksForDay) ->
+                    CalendarTask(day, tasksForDay)
+                }
+
+                _calendarTasks.value = grouped
+            }
         }
+    }
+
+    fun changeMonth(newMonth: Int, newYear: Int) {
+        _selectedMonth.value = newMonth
+        _selectedYear.value = newYear
+
+        _selectedDate.value = null
+        _selectedDateTriple.value = null
+        _selectedDateTasks.value = emptyList()
+
+        refreshCalendarTasks(newMonth, newYear)
     }
 }
