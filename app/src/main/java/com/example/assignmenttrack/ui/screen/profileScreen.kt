@@ -26,6 +26,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,20 +41,22 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.example.assignmenttrack.ui.theme.leagueSpartan
 import com.example.assignmenttrack.R
+import com.example.assignmenttrack.ui.components.ChangeNameDialog
 import com.example.assignmenttrack.viewModel.UserViewModel
 import java.io.File
 
 @Composable
-fun ProfileSection(viewModel: UserViewModel = hiltViewModel(), onBackClick: () -> Unit){
-    val user by viewModel.user.collectAsStateWithLifecycle()
+fun ProfileSection(userViewModel: UserViewModel = hiltViewModel(), onBackClick: () -> Unit){
+    val user by userViewModel.user.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        uri?.let { viewModel.updatePhotoProfile(context, uri) }
+        uri?.let { userViewModel.updatePhotoProfile(context, uri) }
     } // Library ambil foto dari galerr, outputnya Uri
 
+    val changeNameDialogState = remember { mutableStateOf(false) }
     Surface(
         modifier = Modifier
             .fillMaxWidth(),
@@ -109,7 +113,7 @@ fun ProfileSection(viewModel: UserViewModel = hiltViewModel(), onBackClick: () -
 
             Row (modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 IconButton(
-                    onClick = { },
+                    onClick = { changeNameDialogState.value = true },
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .height(40.dp)
@@ -142,5 +146,11 @@ fun ProfileSection(viewModel: UserViewModel = hiltViewModel(), onBackClick: () -
                 textAlign = androidx.compose.ui.text.style.TextAlign.Justify,
             )
         }
+    }
+
+
+//    Change Name Dialog Handler
+    if (changeNameDialogState.value){
+        ChangeNameDialog(onDismiss = { changeNameDialogState.value = false }, userViewModel = userViewModel)
     }
 }

@@ -8,6 +8,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
+import com.example.assignmenttrack.ui.components.ChangeNameDialog
 import com.example.assignmenttrack.ui.navigation.AppNavigation
 import com.example.assignmenttrack.ui.theme.AssignmentTrackTheme
 import com.example.assignmenttrack.viewModel.TaskListViewModel
@@ -29,3 +30,4 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+

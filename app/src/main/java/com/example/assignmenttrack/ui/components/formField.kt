@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.MoreTime
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -74,11 +73,11 @@ fun FormField1(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 focusedTextColor = Color.Black,
-                unfocusedTextColor = Color.DarkGray
+                unfocusedTextColor = Color.DarkGray,
             ),
             modifier = modifier
                 .fillMaxWidth()
-                .clip(shape = RoundedCornerShape(20.dp))
+                .clip(shape = RoundedCornerShape(20.dp)),
         )
     }
 }
@@ -111,7 +110,7 @@ fun FormField2(
                 .fillMaxWidth()
                 .defaultMinSize(minHeight = 200.dp)
                 .clip(shape = RoundedCornerShape(20.dp))
-                .border(3.dp, Color(0xFFCAD6FF), shape = RoundedCornerShape(20.dp))
+                .border(3.dp, Color(0xFFCAD6FF), shape = RoundedCornerShape(20.dp)),
         )
     }
 }
@@ -166,7 +165,7 @@ fun FormFieldDateTime(
                         )
                     }
 
-                    Divider(
+                    HorizontalDivider(
                         color = Color.Gray.copy(alpha = 0.5f),
                         modifier = Modifier
                             .width(1.dp)
