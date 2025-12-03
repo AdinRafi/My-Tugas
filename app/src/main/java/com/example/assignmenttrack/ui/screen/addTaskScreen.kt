@@ -12,10 +12,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.assignmenttrack.ui.components.TaskForm
+import com.example.assignmenttrack.viewModel.TaskListViewModel
+
 
 @Composable
-fun AddTaskScreen() {
+fun AddTaskScreen(onTaskSubmit: () -> Unit, taskListViewModel: TaskListViewModel = hiltViewModel()) {
     Surface(modifier = Modifier.fillMaxSize(), color = Color.White) {
         Column(
             modifier = Modifier
@@ -24,10 +27,9 @@ fun AddTaskScreen() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            /* TODO: Tambah calendar*/
-
             Spacer(modifier = Modifier.height(16.dp))
-            TaskForm()
+            TaskForm(modifier = Modifier, taskListViewModel = taskListViewModel, onTaskSubmit = onTaskSubmit)
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

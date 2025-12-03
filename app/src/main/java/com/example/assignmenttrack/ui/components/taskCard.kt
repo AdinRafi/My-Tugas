@@ -38,22 +38,39 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.assignmenttrack.Model.Task
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.assignmenttrack.model.Task
 import com.example.assignmenttrack.ui.theme.leagueSpartan
+import com.example.assignmenttrack.viewModel.TaskListViewModel
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 // single card task
 @Composable
-fun TaskCard(task: Task, modifier: Modifier) {
+fun TaskCard(task: Task, modifier: Modifier, taskListViewModel: TaskListViewModel = hiltViewModel(), onEditClick: (Task) -> Unit) {
     val formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy - hh:mm a")
         .withZone(ZoneId.systemDefault())
     var expanded by remember { mutableStateOf(false) }
 
+    val hintColor: Color = when (task.status) {
+        true -> {
+            Color(0xFFA1EA9B)
+        }
+
+        false -> {
+            Color(0xFFF06292)
+        }
+
+        else -> {
+            Color.Transparent
+        }
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp)),
+            .clip(RoundedCornerShape(20.dp))
+            .border(3.dp, hintColor, RoundedCornerShape(20.dp)),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(6.dp)
     ) {
@@ -101,7 +118,10 @@ fun TaskCard(task: Task, modifier: Modifier) {
                     ) {
                         DropdownMenuItem(
                             text = { Text("Edit", color = Color(0xFF728FFC)) },
-                            onClick = { /* TODO: Handle edit */ },
+                            onClick = {
+                                onEditClick(task)
+                                expanded = false
+                            },
                             leadingIcon = {Icon(imageVector = Icons.Default.Edit, tint = Color(0xFF456DEE), contentDescription = "Edit")}
                         )
 
@@ -109,7 +129,10 @@ fun TaskCard(task: Task, modifier: Modifier) {
 
                         DropdownMenuItem(
                             text = { Text("Complete", color = Color(0xFF728FFC)) },
-                            onClick = { /* TODO: Handle complete */ },
+                            onClick = {
+                                taskListViewModel.completeTask(task.id)
+                                expanded = false
+                            },
                             leadingIcon = {Icon(imageVector = Icons.Default.CheckCircle, tint = Color(0xFF456DEE), contentDescription = "Complete")}
                         )
 
@@ -117,7 +140,10 @@ fun TaskCard(task: Task, modifier: Modifier) {
 
                         DropdownMenuItem(
                             text = { Text("Delete", color = Color(0xFF728FFC)) },
-                            onClick = { /* TODO: Handle delete */ },
+                            onClick = {
+                                taskListViewModel.deleteTask(task.id)
+                                expanded = false
+                            },
                             leadingIcon = {Icon(imageVector = Icons.Default.Delete, tint = Color(0xFF456DEE), contentDescription = "Delete")}
                         )
                     }

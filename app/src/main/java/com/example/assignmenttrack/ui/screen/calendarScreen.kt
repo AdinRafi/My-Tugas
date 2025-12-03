@@ -1,7 +1,6 @@
 package com.example.assignmenttrack.ui.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,10 +10,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,16 +29,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.assignmenttrack.model.Task
 import com.example.assignmenttrack.ui.components.Calendar
 import com.example.assignmenttrack.ui.components.TaskCard
 import com.example.assignmenttrack.ui.theme.leagueSpartan
-import com.example.assignmenttrack.ViewModel.CalendarViewModel
-import com.example.assignmenttrack.Model.Task
+import com.example.assignmenttrack.viewModel.CalendarViewModel
+import com.example.assignmenttrack.viewModel.TaskListViewModel
+import java.time.LocalDate
 
 @Composable
-fun CalendarRoute(){
+fun CalendarRoute(onBackClick: () -> Unit){
     Surface(
         color = Color(0xFFCAD6FF),
         modifier = Modifier
@@ -44,7 +48,8 @@ fun CalendarRoute(){
     ) {
         CalendarScreen(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            onBackClick = onBackClick
         )
     }
 }
@@ -53,36 +58,40 @@ fun CalendarRoute(){
 @Composable
 fun CalendarScreen(
     modifier: Modifier = Modifier,
-    viewModel: CalendarViewModel = viewModel()
+    viewModel: CalendarViewModel = hiltViewModel(),
+    onBackClick: () -> Unit
 ) {
-    val currentYear by viewModel.currentYear.collectAsStateWithLifecycle()
-    val currentMonth by viewModel.currentMonth.collectAsStateWithLifecycle()
     val calendarTasks by viewModel.calendarTasks.collectAsStateWithLifecycle()
-    val selectedDate by viewModel.selectedDate.collectAsStateWithLifecycle()
+    val selectedDateTriple by viewModel.selectedDateTriple.collectAsStateWithLifecycle()
     val selectedDateTasks by viewModel.selectedDateTasks.collectAsStateWithLifecycle()
+    val taskListViewModel: TaskListViewModel = hiltViewModel()
+    val selectedMonth by viewModel.selectedMonth.collectAsStateWithLifecycle()
+    val selectedYear by viewModel.selectedYear.collectAsStateWithLifecycle()
 
     Surface(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         color = Color(0xFFCAD6FF)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
-                CalendarScreenHeader()
-
+                CalendarScreenHeader(onBackClick = onBackClick)
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Calendar component
                 Calendar(
                     modifier = Modifier
                         .height(275.dp)
                         .fillMaxWidth()
                         .wrapContentWidth(Alignment.CenterHorizontally),
                     calendarInput = calendarTasks,
-                    year = currentYear,
-                    month = currentMonth,
-                    onDayClick = { day, month, year ->
-                        viewModel.onDayClick(day, month, year)
-                        viewModel.loadSelectedDateTasks(Triple(day, month, year), calendarTasks)
+                    year = selectedYear,
+                    month = selectedMonth,
+                    onDayClick = { day, monthClicked, yearClicked ->
+                        if (monthClicked != selectedMonth || yearClicked != selectedYear) {
+                            viewModel.changeMonth(monthClicked, yearClicked)
+                        }
+                        val date = LocalDate.of(yearClicked, monthClicked, day)
+                        viewModel.setSelectedDate(date)
                     },
                     onMonthChange = { newMonth, newYear ->
                         viewModel.changeMonth(newMonth, newYear)
@@ -94,18 +103,21 @@ fun CalendarScreen(
                         .weight(1f)
                         .fillMaxWidth()
                         .align(Alignment.CenterHorizontally)
-                ){
+                ) {
+                    // Pesan jika tidak ada task atau tanggal belum dipilih
                     DateText(
                         modifier = Modifier,
-                        selectedDate = selectedDate,
+                        selectedDate = selectedDateTriple,
                         selectedDateTasks = selectedDateTasks
                     )
 
                     TaskList(
                         modifier = Modifier,
-                        tasks = selectedDateTasks
+                        tasks = selectedDateTasks,
+                        taskListViewModel = taskListViewModel
                     )
 
+                    // Gradien atas
                     Box(
                         modifier = Modifier
                             .height(24.dp)
@@ -127,21 +139,30 @@ fun CalendarScreen(
 }
 
 @Composable
-fun CalendarScreenHeader(){
+fun CalendarScreenHeader(onBackClick: () -> Unit){
     Column(
         modifier = Modifier
             .background(Color.White)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(top = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
-            modifier = Modifier
-                .padding(top = 32.dp, bottom = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth().padding(top = 32.dp, bottom = 16.dp, start = 16.dp, end = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            IconButton(onClick = onBackClick) {
+                 Icon(
+                     imageVector = Icons.AutoMirrored.Filled.ArrowBackIos,
+                     contentDescription = "Balik",
+                     tint = Color(0xFF2260FF)
+                 )
+             }
+
             Text(
                 text = "My Kalender",
+                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = leagueSpartan,
@@ -152,14 +173,14 @@ fun CalendarScreenHeader(){
 }
 
 @Composable
-fun TaskList(modifier: Modifier = Modifier, tasks: List<Task>) {
+fun TaskList(modifier: Modifier = Modifier, tasks: List<Task>, taskListViewModel: TaskListViewModel) {
     LazyColumn(
         modifier = modifier
             .padding(horizontal = 16.dp),
         contentPadding = PaddingValues(top = 16.dp, bottom = 42.dp),
     ){
         items(items = tasks, key = { it.id }) { task ->
-            TaskCard(task, modifier = Modifier.fillMaxWidth())
+            TaskCard(task, modifier = Modifier.fillMaxWidth(), onEditClick = {} , taskListViewModel =  taskListViewModel)
             Spacer(modifier = Modifier.height(16.dp))
         }
     }

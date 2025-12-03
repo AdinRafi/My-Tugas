@@ -12,20 +12,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.assignmenttrack.model.Task
 import com.example.assignmenttrack.ui.components.GeneralSubmitButton
 import com.example.assignmenttrack.ui.components.ProfileSection
 import com.example.assignmenttrack.ui.components.TaskCard
-import com.example.assignmenttrack.Model.Task
-import com.example.assignmenttrack.Model.TaskList
-import com.example.assignmenttrack.Model.defaultUser
+import com.example.assignmenttrack.viewModel.TaskListViewModel
+
 
 @Composable
 fun MainDashboard(
@@ -33,7 +31,9 @@ fun MainDashboard(
     onAddTaskClick: () -> Unit = {},
     onProfileClick: () -> Unit = {},
     onStatClick: () -> Unit = {},
-    onCalendarClick: () -> Unit = {}
+    onCalendarClick: () -> Unit = {},
+    onEditClick : (Task) -> Unit = {},
+    taskListViewModel: TaskListViewModel
 ) {
     Surface(
         modifier = modifier.fillMaxSize(),
@@ -41,9 +41,8 @@ fun MainDashboard(
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
-                ->
-                ProfileSection(name = defaultUser.name, onStatClick = onStatClick, onProfileClick = onProfileClick, onCalendarClick = onCalendarClick)
-                TaskListScreen(Modifier, TaskList)
+                ProfileSection(onStatClick = onStatClick, onProfileClick = onProfileClick, onCalendarClick = onCalendarClick)
+                TaskListScreen(taskListViewModel, onEditClick = onEditClick)
             }
             GeneralSubmitButton(
                 modifier = Modifier
@@ -59,18 +58,20 @@ fun MainDashboard(
 
 // handle showing list of card task (emg nge lag pas masih debug)
 @Composable
-fun TaskListScreen(modifier: Modifier = Modifier, tasks: List<Task>) {
-    var taskList by remember { mutableStateOf(tasks) }
-
+fun TaskListScreen(
+    taskViewModel: TaskListViewModel,
+    modifier: Modifier = Modifier,
+    onEditClick : (Task) -> Unit = {}
+) {
+    val tasks by taskViewModel.tasks.collectAsState(initial = emptyList())
     LazyColumn(
         modifier = modifier.padding(horizontal = 16.dp),
         contentPadding = PaddingValues(top = 8.dp, bottom = 128.dp)
     ){
-        items(items = taskList, key = { task -> task.id }) { task ->
-            TaskCard(task, modifier = Modifier)
+        val filteredTasks = tasks.filter { it.status == false || it.status == null }
+        items(items = filteredTasks, key = { task -> task.id }) { task ->
+            TaskCard(task, modifier = Modifier, taskViewModel, onEditClick = onEditClick)
             Spacer(Modifier.height(16.dp))
         }
     }
 }
-
-

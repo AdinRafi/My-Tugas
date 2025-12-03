@@ -10,12 +10,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
@@ -32,7 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.assignmenttrack.Model.CalendarTask
+import com.example.assignmenttrack.model.CalendarTask
 import com.example.assignmenttrack.ui.utils.CalendarUtils
 
 @Composable
@@ -83,7 +81,9 @@ fun Calendar(
                     CalendarDayCells(
                         day = day,
                         isCurrentMonth = false,
-                        hasTask = false,
+                        ongoing = false,
+                        complete = false,
+                        late = false,
                         isToday = false,
                         onClick = { onDayClick(day, prevMonth, prevYear) }
                     )
@@ -92,12 +92,16 @@ fun Calendar(
                 items(monthData.daysInMonth) { index -> // kotak-kotak bulan ini
                     val day = index + 1
                     val tasks = calendarInput.find { it.day == day }
-                    val hasTask = tasks?.tasks?.any { !it.status } ?: false
+                    val ongoing = tasks?.tasks?.any { it.status == null } ?: false
+                    val complete = tasks?.tasks?.any { it.status == true } ?: false
+                    val late = tasks?.tasks?.any { it.status == false } ?: false
                     val isToday = CalendarUtils.isToday(day, month, year)
                     CalendarDayCells(
                         day = day,
                         isCurrentMonth = true,
-                        hasTask = hasTask,
+                        ongoing = ongoing,
+                        complete = complete,
+                        late = late,
                         isToday = isToday,
                         onClick = { onDayClick(day, month, year) }
                     )
@@ -110,7 +114,9 @@ fun Calendar(
                     CalendarDayCells(
                         day = day,
                         isCurrentMonth = false,
-                        hasTask = false,
+                        ongoing = false,
+                        complete = false,
+                        late = false,
                         isToday = false,
                         onClick = { onDayClick(day, nextMonth, nextYear) }
                     )
@@ -212,7 +218,9 @@ private fun CalendarDayCells(
     day: Int,
     isCurrentMonth: Boolean,
     isToday: Boolean,
-    hasTask: Boolean,
+    ongoing: Boolean,
+    complete: Boolean,
+    late: Boolean,
     onClick: () -> Unit
 ){
     Box(
@@ -227,7 +235,9 @@ private fun CalendarDayCells(
                 .clip(CircleShape)
                 .background(
                     when {
-                        hasTask -> Color(0xFF2260FF)
+                        ongoing -> Color(0xFF2260FF)
+                        complete -> Color(0xCC2260FF)
+                        late -> Color(0x802260FF)
                         isToday -> Color.White
                         else -> Color.Transparent
                     },
@@ -246,12 +256,14 @@ private fun CalendarDayCells(
                 text = day.toString(),
                 color = when {
                     !isCurrentMonth -> Color.LightGray
+                    ongoing -> Color.White
+                    complete -> Color.White
+                    late -> Color.White
                     isToday -> Color(0xFF2260FF)
-                    hasTask -> Color.White
                     else -> Color.Black
                 },
                 fontWeight = when {
-                    isToday || hasTask -> FontWeight.Bold
+                    isToday || ongoing || complete || late -> FontWeight.Bold
                     else -> FontWeight.Normal
                 },
                 fontSize = when {

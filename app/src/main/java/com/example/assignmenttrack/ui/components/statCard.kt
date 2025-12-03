@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,10 +38,10 @@ fun StatCard(label: String, value: String, color: Color) {
         ) {
             Text(
                 text = label,
-                fontFamily = leagueSpartan,
+                fontFamily = FontFamily.SansSerif,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 16.sp,
-                color = Color.DarkGray
+                fontSize = 14.sp,
+                color = Color(0xFF4B4B4B)
             )
         }
         Box(
@@ -51,9 +52,9 @@ fun StatCard(label: String, value: String, color: Color) {
         ) {
             Text(
                 text = value,
-                fontFamily = leagueSpartan,
-                fontWeight = FontWeight.Bold,
-                fontSize = 24.sp,
+                fontFamily = FontFamily.SansSerif,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 22.sp,
                 color = color,
             )
         }

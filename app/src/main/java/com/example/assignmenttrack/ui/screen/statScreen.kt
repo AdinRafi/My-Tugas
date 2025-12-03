@@ -1,42 +1,126 @@
 package com.example.assignmenttrack.ui.screen
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import com.example.assignmenttrack.ui.components.StatCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.assignmenttrack.Model.defaultUser
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.assignmenttrack.ui.components.StatCard
 import com.example.assignmenttrack.ui.theme.leagueSpartan
-import kotlin.math.cos
-import kotlin.math.sin
+import com.example.assignmenttrack.viewModel.UserViewModel
 
 @Composable
-fun StatScreen(){
+fun StatScreen(viewModel: UserViewModel = hiltViewModel(), onBackClick: () -> Unit){
+
+    val stat by viewModel.stat.collectAsStateWithLifecycle()
+
+    val totalTask = stat.taskTotal
+    val completedTasks = stat.taskCompleted
+    val lateTasks = stat.taskLate
+
+
+    val totalBelajar = stat.belajarTotal
+    val totalTugas = stat.tugasTotal
+    val totalKerja = stat.kerjaTotal
+
+
+    val onTimePercentage = if (completedTasks + lateTasks > 0)
+    {
+        (completedTasks.toFloat() / (completedTasks + lateTasks).toFloat() * 100).toInt()
+    }
+    else
+    {
+        0
+    }
+
+    val animationStarted = remember { mutableStateOf(false) }
+    val animatedPercentage by animateFloatAsState(
+        targetValue = if (animationStarted.value) 1f else 0f,
+        animationSpec = tween(durationMillis = 1200)
+    )
+
+
+    val animatedOnTimeStat by animateFloatAsState(
+        targetValue = if (animationStarted.value) onTimePercentage.toFloat() else 0f,
+        animationSpec = tween(durationMillis = 1200)
+    )
+
+    val animatedTotalStudy by animateFloatAsState(
+        targetValue = if (animationStarted.value) totalBelajar.toFloat() else 0f,
+        animationSpec = tween(durationMillis = 1200)
+    )
+
+    val animatedTotalWork by animateFloatAsState(
+        targetValue = if (animationStarted.value) totalKerja.toFloat() else 0f,
+        animationSpec = tween(durationMillis = 1200)
+    )
+
+    val animatedTotalAssignment by animateFloatAsState(
+        targetValue = if (animationStarted.value) totalTugas.toFloat() else 0f,
+        animationSpec = tween(durationMillis = 1200)
+    )
+
+    // Trigger the animation when the composable is first drawn
+    androidx.compose.runtime.LaunchedEffect(Unit) {
+        animationStarted.value = true
+    }
+
+
+
+
+
     Surface(color = Color(0xFFCAD6FF)){
         Box(
             modifier = Modifier
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ){
+            IconButton(
+                onClick = {onBackClick()},
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding( top = 24.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBackIos,
+                    contentDescription = "Balik",
+                    tint = Color(0xFF2260FF)
+                )
+            }
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -44,7 +128,7 @@ fun StatScreen(){
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Statistik Aktivitas",
+                    text = "My Statistik",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = leagueSpartan,
@@ -54,13 +138,13 @@ fun StatScreen(){
 
                 Box(
                     modifier = Modifier
-                        .padding(top = 16.dp, bottom = 4.dp)
+                        .padding(top = 16.dp)
                         .fillMaxHeight(0.5f)
                         .fillMaxWidth(1f),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Total Aktivitas: \n ${defaultUser.TaskTotal}",
+                        text = "Aktivitas: \n ${stat.taskTotal}",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center,
@@ -76,19 +160,18 @@ fun StatScreen(){
                         val canvasHeight = size.height
                         val arcSize = minOf(canvasWidth, canvasHeight) * 0.93f
 
-//                      slices
+                        //                      slices
                         data class Slice(
-                            val value: Float,
+                            val value:  Float,
                             val color: Color,
                             val label: String?
                         )
 
-//                      Magic Slices
+//                      Magic Slices with animation
                         val slices = listOf(
-
-                            Slice(defaultUser.TaskCompleted.toFloat(), Color(0xFF64B5F6),"Completed"),
-                            Slice(defaultUser.TaskLate.toFloat(), Color(0xFFF06292),"Late"),
-                            Slice(defaultUser.TaskPending.toFloat(), Color(0xFF81C784),"OnGoing"),
+                            Slice(completedTasks.toFloat(), Color(0xFF81C784),"Completed"),
+                            Slice(lateTasks.toFloat(), Color(0xFFF06292),"Late"),
+                            Slice(totalTask - completedTasks - lateTasks.toFloat(), Color(0xFF6489F6),"OnGoing"),
                         )
 
 
@@ -101,49 +184,72 @@ fun StatScreen(){
                             (canvasHeight - arcSize) / 2f
                         )
 
-
                         slices.forEach { slice ->
                             val sweep = 360f * (slice.value / total)
                             val strokeWidth = arcSize * 0.2f
-                            val labelRadius = (arcSize / 1.4f)
                             drawArc(
                                 color = slice.color,
                                 startAngle = currentAngle,
-                                sweepAngle = sweep,
+                                sweepAngle = sweep * animatedPercentage,
                                 useCenter = false,
                                 topLeft = topLeft,
                                 size = Size(arcSize, arcSize),
                                 style = Stroke(width = strokeWidth, cap = StrokeCap.Butt)
                             )
 
-//                      Magic Rune for each slice
-                            slice.label?.let { text ->
-
-                                val labelAngleDeg = currentAngle + sweep / 2f
-                                val labelAngleRad = Math.toRadians(labelAngleDeg.toDouble())
-
-                                val labelX = center.x + labelRadius * cos(labelAngleRad).toFloat()
-                                val labelY = center.y + labelRadius * sin(labelAngleRad).toFloat()
-
-                                drawContext.canvas.nativeCanvas.apply {
-                                    drawText(
-                                        text,
-                                        labelX,
-                                        labelY,
-                                        android.graphics.Paint().apply {
-                                            color = slice.color.toArgb()
-                                            textSize = 42f
-                                            textAlign = android.graphics.Paint.Align.CENTER
-                                            isAntiAlias = true
-                                            typeface = android.graphics.Typeface.DEFAULT_BOLD
-                                        }
-                                    )
-                                }
-                            }
-
 //                          continuous slices for better AoE
                             currentAngle += sweep
                         }
+                    }
+                }
+
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth(1f)
+                        .padding(bottom = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ){
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(modifier = Modifier
+                            .height(16.dp)
+                            .width(20.dp)
+                            .padding(end = 4.dp)
+                            .background(color = Color(0xFF6489F6), shape = CircleShape)
+                        )
+                        Text(
+                            text = "Ongoing",
+                            color = Color(0xFF1E4DEA),
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(modifier = Modifier
+                            .height(16.dp)
+                            .width(20.dp)
+                            .padding(end = 4.dp)
+                            .background(color = Color(0xFF81C784), shape = CircleShape)
+                        )
+                        Text(
+                            text = "Completed",
+                            color = Color(0xFF48BB4D),
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(modifier = Modifier
+                            .height(16.dp)
+                            .width(20.dp)
+                            .padding(end = 4.dp)
+                            .background(color = Color(0xFFF06292), shape = CircleShape)
+                        )
+                        Text(
+                            text = "Late",
+                            color = Color(0xFFE23066),
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.SemiBold
+                        )
                     }
                 }
 
@@ -153,38 +259,24 @@ fun StatScreen(){
                     horizontalAlignment = Alignment.Start,
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    val completedTasks = defaultUser.TaskCompleted
-                    val lateTasks = defaultUser.TaskLate
-                    val totalCompleted = completedTasks + lateTasks
-                    val onTimePercentage = if (totalCompleted > 0) {
-                        (completedTasks.toFloat() / totalCompleted.toFloat() * 100).toInt()
-                    } else {
-                        0
-                    }
-
-                    val TotalBelajar = defaultUser.BelajarTotal
-                    val TotalTugas = defaultUser.TugasTotal
-                    val TotalKerja = defaultUser.KerjaTotal
-
-
                     StatCard(
-                        label = "Persentase Tepat Waktu",
-                        value = "$onTimePercentage%",
+                        label = "Persentase Tepat Waktu:",
+                        value = "${(animatedOnTimeStat).toInt()}%",
                         color = Color(0xFF2260FF)
                     )
                     StatCard(
                         label = "Total Belajar",
-                        value = TotalBelajar.toString(),
+                        value = "${(animatedTotalStudy).toInt()}",
                         color = Color(0xFF2260FF)
                     )
                     StatCard(
                         label = "Total Kerja",
-                        value = TotalKerja.toString(),
+                        value = "${(animatedTotalWork).toInt()}",
                         color = Color(0xFF2260FF)
                     )
                     StatCard(
                         label = "Total Tugas",
-                        value = TotalTugas.toString(),
+                        value = "${(animatedTotalAssignment).toInt()}",
                         color = Color(0xFF2260FF)
                     )
                 }
