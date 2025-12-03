@@ -180,7 +180,7 @@ fun TaskList(modifier: Modifier = Modifier, tasks: List<Task>, taskListViewModel
         contentPadding = PaddingValues(top = 16.dp, bottom = 42.dp),
     ){
         items(items = tasks, key = { it.id }) { task ->
-            TaskCard(task, modifier = Modifier.fillMaxWidth(), taskListViewModel =  taskListViewModel)
+            TaskCard(task, modifier = Modifier.fillMaxWidth(), onEditClick = {} , taskListViewModel =  taskListViewModel)
             Spacer(modifier = Modifier.height(16.dp))
         }
     }

@@ -13,12 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.assignmenttrack.ui.components.TaskForm
+import com.example.assignmenttrack.model.Task
+import com.example.assignmenttrack.ui.components.EditTaskForm
 import com.example.assignmenttrack.viewModel.TaskListViewModel
 
 
 @Composable
-fun AddTaskScreen(onTaskSubmit: () -> Unit, taskListViewModel: TaskListViewModel = hiltViewModel()) {
+fun EditTaskScreen(onEditSubmit: () -> Unit, taskListViewModel: TaskListViewModel = hiltViewModel(), oldTask: Task) {
     Surface(modifier = Modifier.fillMaxSize(), color = Color.White) {
         Column(
             modifier = Modifier
@@ -28,7 +29,7 @@ fun AddTaskScreen(onTaskSubmit: () -> Unit, taskListViewModel: TaskListViewModel
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
             Spacer(modifier = Modifier.height(16.dp))
-            TaskForm(modifier = Modifier, taskListViewModel = taskListViewModel, onTaskSubmit = onTaskSubmit)
+            EditTaskForm(oldTask = oldTask, taskListViewModel = taskListViewModel, onEditSubmit = onEditSubmit)
             Spacer(modifier = Modifier.height(16.dp))
         }
     }

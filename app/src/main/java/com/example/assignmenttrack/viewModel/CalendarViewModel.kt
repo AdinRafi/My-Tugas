@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.assignmenttrack.database.TaskRepository
 import com.example.assignmenttrack.model.Task
-import com.example.assignmenttrack.uiStateData.CalendarTask
+import com.example.assignmenttrack.model.CalendarTask
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -5,13 +5,18 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.assignmenttrack.ui.screen.MainDashboard
 import com.example.assignmenttrack.ui.screen.AddTaskScreen
 import com.example.assignmenttrack.ui.screen.CalendarRoute
+import com.example.assignmenttrack.ui.screen.EditTaskScreen
 import com.example.assignmenttrack.ui.screen.ProfileSection
 import com.example.assignmenttrack.ui.screen.StatScreen
 import com.example.assignmenttrack.viewModel.TaskListViewModel
@@ -24,12 +29,16 @@ sealed class Screen(val route: String) {
     data object Stat : Screen("stat")
 
     data object Calendar : Screen("Calendar")
+
+    data object EditTask : Screen("edit_task/{taskId}"){
+        fun createRoute(taskId: Int) = "edit_task/$taskId"
+    }
 }
 
 
 // host the navigation graph and define the different screen.
 @Composable
-fun AppNavigation(navController: NavHostController, viewModel: TaskListViewModel) {
+fun AppNavigation(navController: NavHostController) {
     val taskListViewModel: TaskListViewModel = hiltViewModel()
     NavHost(
         navController = navController,
@@ -47,9 +56,11 @@ fun AppNavigation(navController: NavHostController, viewModel: TaskListViewModel
                 onProfileClick = { navController.navigate(Screen.Profile.route) },
                 onStatClick = { navController.navigate(Screen.Stat.route) },
                 onCalendarClick = { navController.navigate(Screen.Calendar.route) },
+                onEditClick = { task -> navController.navigate(Screen.EditTask.createRoute(task.id)) },
                 taskListViewModel = taskListViewModel
             )
         }
+
 
         composable(Screen.AddTask.route){
             AddTaskScreen(
@@ -72,6 +83,23 @@ fun AppNavigation(navController: NavHostController, viewModel: TaskListViewModel
             CalendarRoute(
                 onBackClick = {navController.popBackStack()}
             )
+        }
+
+        composable (
+            route = Screen.EditTask.route,
+            arguments = listOf(navArgument("taskId") { type = NavType.StringType})
+        ){ backStackEntry ->
+            val taskId = backStackEntry.arguments?.getString("taskId")
+            val tasks by taskListViewModel.tasks.collectAsState(initial = emptyList())
+            val taskToEdit = tasks.find { it.id.toString() == taskId }
+
+            if (taskToEdit != null){
+                EditTaskScreen(
+                    onEditSubmit = { navController.navigate(Screen.Dashboard.route) },
+                    taskListViewModel = taskListViewModel,
+                    oldTask = taskToEdit
+                )
+            }
         }
     }
 }

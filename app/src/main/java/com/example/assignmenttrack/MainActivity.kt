@@ -26,8 +26,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AssignmentTrackTheme {
-                val viewModel: TaskListViewModel = hiltViewModel()
-                AppNavigation(rememberNavController() , viewModel)
+                AppNavigation(rememberNavController())
             }
         }
     }
