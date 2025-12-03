@@ -66,7 +66,6 @@ fun CalendarScreen(
     val calendarTasks by viewModel.calendarTasks.collectAsStateWithLifecycle()
     val selectedDateTriple by viewModel.selectedDateTriple.collectAsStateWithLifecycle()
     val selectedDateTasks by viewModel.selectedDateTasks.collectAsStateWithLifecycle()
-    val taskListViewModel: TaskListViewModel = hiltViewModel()
     val selectedMonth by viewModel.selectedMonth.collectAsStateWithLifecycle()
     val selectedYear by viewModel.selectedYear.collectAsStateWithLifecycle()
 
@@ -116,7 +115,6 @@ fun CalendarScreen(
                     TaskList(
                         modifier = Modifier,
                         tasks = selectedDateTasks,
-                        taskListViewModel = taskListViewModel
                     )
 
                     // Gradien atas
@@ -175,14 +173,14 @@ fun CalendarScreenHeader(onBackClick: () -> Unit){
 }
 
 @Composable
-fun TaskList(modifier: Modifier = Modifier, tasks: List<Task>, taskListViewModel: TaskListViewModel) {
+fun TaskList(modifier: Modifier = Modifier, tasks: List<Task>) {
     LazyColumn(
         modifier = modifier
             .padding(horizontal = 16.dp),
         contentPadding = PaddingValues(top = 16.dp, bottom = 42.dp),
     ){
         items(items = tasks, key = { it.id }) { task ->
-            TaskCard(task, modifier = Modifier.fillMaxWidth(), taskListViewModel =  taskListViewModel)
+            TaskCard(task, modifier = Modifier.fillMaxWidth())
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
