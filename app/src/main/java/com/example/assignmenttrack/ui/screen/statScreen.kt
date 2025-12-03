@@ -3,20 +3,24 @@ package com.example.assignmenttrack.ui.screen
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import com.example.assignmenttrack.ui.components.StatCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,15 +31,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.assignmenttrack.ui.components.StatCard
 import com.example.assignmenttrack.ui.theme.leagueSpartan
 import com.example.assignmenttrack.viewModel.UserViewModel
-import kotlin.math.abs
 
 @Composable
 fun StatScreen(viewModel: UserViewModel = hiltViewModel(), onBackClick: () -> Unit){
@@ -133,7 +138,7 @@ fun StatScreen(viewModel: UserViewModel = hiltViewModel(), onBackClick: () -> Un
 
                 Box(
                     modifier = Modifier
-                        .padding(top = 16.dp, bottom = 4.dp)
+                        .padding(top = 16.dp)
                         .fillMaxHeight(0.5f)
                         .fillMaxWidth(1f),
                     contentAlignment = Alignment.Center
@@ -195,6 +200,56 @@ fun StatScreen(viewModel: UserViewModel = hiltViewModel(), onBackClick: () -> Un
 //                          continuous slices for better AoE
                             currentAngle += sweep
                         }
+                    }
+                }
+
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth(1f)
+                        .padding(bottom = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ){
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(modifier = Modifier
+                            .height(16.dp)
+                            .width(20.dp)
+                            .padding(end = 4.dp)
+                            .background(color = Color(0xFF6489F6), shape = CircleShape)
+                        )
+                        Text(
+                            text = "Ongoing",
+                            color = Color(0xFF1E4DEA),
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(modifier = Modifier
+                            .height(16.dp)
+                            .width(20.dp)
+                            .padding(end = 4.dp)
+                            .background(color = Color(0xFF81C784), shape = CircleShape)
+                        )
+                        Text(
+                            text = "Completed",
+                            color = Color(0xFF48BB4D),
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(modifier = Modifier
+                            .height(16.dp)
+                            .width(20.dp)
+                            .padding(end = 4.dp)
+                            .background(color = Color(0xFFF06292), shape = CircleShape)
+                        )
+                        Text(
+                            text = "Late",
+                            color = Color(0xFFE23066),
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.SemiBold
+                        )
                     }
                 }
 

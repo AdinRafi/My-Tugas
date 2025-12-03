@@ -1,6 +1,6 @@
 package com.example.assignmenttrack.ui.utils
 
-import com.example.assignmenttrack.uiStateData.CalendarMonthData
+import com.example.assignmenttrack.model.CalendarMonthData
 import java.time.LocalDate
 import java.time.YearMonth
 

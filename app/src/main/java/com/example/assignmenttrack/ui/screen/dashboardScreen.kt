@@ -18,12 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.assignmenttrack.uiStateData.TaskListUiState
+import com.example.assignmenttrack.model.Task
 import com.example.assignmenttrack.ui.components.GeneralSubmitButton
 import com.example.assignmenttrack.ui.components.ProfileSection
 import com.example.assignmenttrack.ui.components.TaskCard
-import com.example.assignmenttrack.uiStateData.defaultUser
 import com.example.assignmenttrack.viewModel.TaskListViewModel
 
 
@@ -34,6 +32,7 @@ fun MainDashboard(
     onProfileClick: () -> Unit = {},
     onStatClick: () -> Unit = {},
     onCalendarClick: () -> Unit = {},
+    onEditClick : (Task) -> Unit = {},
     taskListViewModel: TaskListViewModel
 ) {
     Surface(
@@ -43,7 +42,7 @@ fun MainDashboard(
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
                 ProfileSection(onStatClick = onStatClick, onProfileClick = onProfileClick, onCalendarClick = onCalendarClick)
-                TaskListScreen(taskListViewModel)
+                TaskListScreen(taskListViewModel, onEditClick = onEditClick)
             }
             GeneralSubmitButton(
                 modifier = Modifier
@@ -61,7 +60,8 @@ fun MainDashboard(
 @Composable
 fun TaskListScreen(
     taskViewModel: TaskListViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onEditClick : (Task) -> Unit = {}
 ) {
     val tasks by taskViewModel.tasks.collectAsState(initial = emptyList())
     LazyColumn(
@@ -70,10 +70,8 @@ fun TaskListScreen(
     ){
         val filteredTasks = tasks.filter { it.status == false || it.status == null }
         items(items = filteredTasks, key = { task -> task.id }) { task ->
-            TaskCard(task, modifier = Modifier, taskViewModel)
+            TaskCard(task, modifier = Modifier, taskViewModel, onEditClick = onEditClick)
             Spacer(Modifier.height(16.dp))
         }
     }
 }
-
-

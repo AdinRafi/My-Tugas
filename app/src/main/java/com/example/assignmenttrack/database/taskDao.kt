@@ -1,6 +1,6 @@
-package com.example.assignmenttrack.database;
+package com.example.assignmenttrack.database
 
-import androidx.room.*;
+import androidx.room.*
 import com.example.assignmenttrack.model.Stat
 import com.example.assignmenttrack.model.Task
 import kotlinx.coroutines.flow.Flow

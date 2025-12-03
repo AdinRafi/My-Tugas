@@ -1,7 +1,6 @@
 package com.example.assignmenttrack.ui.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -32,7 +31,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.assignmenttrack.model.Task
 import com.example.assignmenttrack.ui.components.Calendar
 import com.example.assignmenttrack.ui.components.TaskCard
@@ -180,7 +178,7 @@ fun TaskList(modifier: Modifier = Modifier, tasks: List<Task>) {
         contentPadding = PaddingValues(top = 16.dp, bottom = 42.dp),
     ){
         items(items = tasks, key = { it.id }) { task ->
-            TaskCard(task, modifier = Modifier.fillMaxWidth())
+            TaskCard(task, modifier = Modifier.fillMaxWidth(), onEditClick = {})
             Spacer(modifier = Modifier.height(16.dp))
         }
     }

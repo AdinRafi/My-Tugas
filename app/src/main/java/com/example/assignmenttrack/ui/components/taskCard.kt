@@ -47,17 +47,23 @@ import java.time.format.DateTimeFormatter
 
 // single card task
 @Composable
-fun TaskCard(task: Task, modifier: Modifier, taskListViewModel: TaskListViewModel = hiltViewModel()) {
+fun TaskCard(task: Task, modifier: Modifier, taskListViewModel: TaskListViewModel = hiltViewModel(), onEditClick: (Task) -> Unit) {
     val formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy - hh:mm a")
         .withZone(ZoneId.systemDefault())
     var expanded by remember { mutableStateOf(false) }
 
-    val hintColor : Color =  if (task.status == true) {
-        Color(0xFFA1EA9B)
-    } else if (task.status == false) {
-        Color(0xFFF06292)
-    } else {
-        Color.Transparent
+    val hintColor: Color = when (task.status) {
+        true -> {
+            Color(0xFFA1EA9B)
+        }
+
+        false -> {
+            Color(0xFFF06292)
+        }
+
+        else -> {
+            Color.Transparent
+        }
     }
 
     Card(
@@ -112,7 +118,7 @@ fun TaskCard(task: Task, modifier: Modifier, taskListViewModel: TaskListViewMode
                     ) {
                         DropdownMenuItem(
                             text = { Text("Edit", color = Color(0xFF728FFC)) },
-                            onClick = { /* TODO: Handle edit */ },
+                            onClick = { onEditClick(task) },
                             leadingIcon = {Icon(imageVector = Icons.Default.Edit, tint = Color(0xFF456DEE), contentDescription = "Edit")}
                         )
 
