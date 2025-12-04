@@ -46,7 +46,7 @@ class UserViewModel @Inject constructor(
 
     fun refreshStat() {
         viewModelScope.launch {
-            userRepository.getStat(System.currentTimeMillis()).collect { statData ->
+            userRepository.getStat().collect { statData ->
                 _stat.value = statData
             }
         }

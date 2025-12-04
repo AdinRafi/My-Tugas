@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.work.runtime.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -70,6 +71,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-text-google-fonts:1.9.4")
     implementation("androidx.datastore:datastore-preferences:1.1.7")
     implementation("androidx.room:room-ktx:2.8.4")
+    implementation("androidx.work:work-runtime-ktx:2.11.0")
+
 
     ksp("androidx.room:room-compiler:2.8.4")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0-alpha01")

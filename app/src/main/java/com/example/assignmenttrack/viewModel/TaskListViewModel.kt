@@ -1,16 +1,22 @@
 package com.example.assignmenttrack.viewModel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.assignmenttrack.database.TaskRepository
 import com.example.assignmenttrack.model.Task
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 @HiltViewModel
-class TaskListViewModel @Inject constructor(private val db: TaskRepository) : ViewModel(){
+class TaskListViewModel @Inject constructor(
+    private val db: TaskRepository,
+    @ApplicationContext private val context: Context
+    ) : ViewModel(){
 
     // Expose tasks dari repository
     val tasks: Flow<List<Task>> = db.getAllTasks()
@@ -20,6 +26,8 @@ class TaskListViewModel @Inject constructor(private val db: TaskRepository) : Vi
         viewModelScope.launch {
             db.insertTask(task)
         }
+
+        db.scheduleLateCheck(context, task = task)
     }
 
     // Hapus task
@@ -27,12 +35,20 @@ class TaskListViewModel @Inject constructor(private val db: TaskRepository) : Vi
         viewModelScope.launch {
             db.deleteTask(taskId)
         }
+
+        db.cancelLateCheck(context,taskId)
     }
 
     // Tandai task selesai
     fun completeTask(taskId: Int) {
         viewModelScope.launch {
             db.completeTask(taskId)
+        }
+    }
+
+    fun lateTask(taskId: Int){
+        viewModelScope.launch{
+            db.lateTask(taskId)
         }
     }
 }

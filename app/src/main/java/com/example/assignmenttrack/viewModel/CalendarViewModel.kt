@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,7 +46,7 @@ class CalendarViewModel @Inject constructor(private val repository: TaskReposito
         _selectedDate.value = date
         _selectedDateTriple.value = Triple(date.dayOfMonth, date.monthValue, date.year)
 
-        val millis = date.atStartOfDay(ZoneId.systemDefault())
+        val millis = date.atStartOfDay(ZoneOffset.UTC)
             .toInstant().toEpochMilli()
 
         viewModelScope.launch {

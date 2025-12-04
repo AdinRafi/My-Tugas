@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.example.assignmenttrack.database.TaskRepository
 import com.example.assignmenttrack.model.Task
 import com.example.assignmenttrack.viewModel.TaskListViewModel
 import java.time.Instant
@@ -125,7 +126,11 @@ fun TaskForm(modifier: Modifier = Modifier, taskListViewModel: TaskListViewModel
                         type = assignmentType,
                         title = assignmentTitle,
                         description = assignmentDescription,
-                        status = null,
+                        status = if (LocalDateTime.now().atZone(ZoneId.systemDefault()).isAfter(selectedDateTime.atZone(ZoneId.systemDefault()))) {
+                            false
+                        } else {
+                            null
+                        },
                         deadline = selectedDateTime.atZone(ZoneId.systemDefault()).toInstant()
                     )
                     taskListViewModel.addTask(newTask)

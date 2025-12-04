@@ -1,9 +1,16 @@
 package com.example.assignmenttrack.database
 
+import android.content.Context
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.example.assignmenttrack.model.Task
+import com.example.assignmenttrack.worker.LateTaskWorker
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalDate
+import java.time.Instant
 import java.time.ZoneId
+import java.util.concurrent.TimeUnit
 
 
 class TaskRepository(private val taskDao: TaskDao) {
@@ -15,6 +22,8 @@ class TaskRepository(private val taskDao: TaskDao) {
 
     suspend fun completeTask(taskId: Int) = taskDao.completeTask(taskId)
 
+    suspend  fun lateTask(taskId: Int) = taskDao.lateTask(taskId)
+
     fun getTasksByMonth(month: Int, year: Int): Flow<List<Task>> {
         val monthStr = "%02d".format(month)
         val yearStr = year.toString()
@@ -24,4 +33,42 @@ class TaskRepository(private val taskDao: TaskDao) {
     fun getTasksByDate(date: Long): Flow<List<Task>> {
         return taskDao.getTasksByDate(date)
     }
+
+    fun scheduleLateCheck(context: Context, task: Task){
+        val workManager = WorkManager.getInstance(context)
+
+        val currentTime = Instant.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        val deadlineTime = task.deadline.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        val delay = deadlineTime - currentTime
+
+        if (delay < 0){
+            return
+        }
+
+        val inputData = workDataOf("TASK_ID" to task.id)
+        val uniqueTag = "late_check_${task.id}"
+
+        val lateRequest = OneTimeWorkRequest.Builder(LateTaskWorker::class.java)
+            .setInitialDelay(delay, timeUnit = TimeUnit.MILLISECONDS)
+            .setInputData(inputData)
+            .addTag(uniqueTag)
+            .build()
+
+
+        workManager.enqueueUniqueWork(
+            uniqueTag,
+            ExistingWorkPolicy.REPLACE,
+            lateRequest
+        )
+    }
+
+    fun cancelLateCheck(context: Context, taskId: Int) {
+        val workManager = WorkManager.getInstance(context)
+        val uniqueTag = "late_check_${taskId}"
+
+        workManager.cancelAllWorkByTag(uniqueTag)
+    }
+
+
+
 }

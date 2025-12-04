@@ -10,7 +10,7 @@ class UserRepository(private val userDao: UserDao, private val taskDao: TaskDao)
     fun getUser(): Flow<User?> = userDao.getUser()
 
     // Flow untuk stat
-    fun getStat(now: Long) = taskDao.getStat(now)
+    fun getStat() = taskDao.getStat()
 
     suspend fun updateName(name: String) = userDao.updateName(name)
     suspend fun updatePhotoProfile(path: String) = userDao.updatePhotoProfile(path)
