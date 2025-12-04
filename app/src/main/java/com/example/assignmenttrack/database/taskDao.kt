@@ -14,6 +14,10 @@ interface TaskDao {
     @Query("UPDATE Tasks SET status = 1 WHERE id = :taskId")
     suspend fun completeTask(taskId: Int)
 
+
+    @Query("UPDATE Tasks SET status = 0 WHERE id = :taskId")
+    suspend fun lateTask(taskId: Int)
+
     @Update
     suspend fun updateTask(task: Task)
 
@@ -26,7 +30,7 @@ interface TaskDao {
     @Query("""
         SELECT 
             SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) AS taskCompleted,
-            SUM(CASE WHEN status = 0 AND deadline < :now THEN 1 ELSE 0 END) AS taskLate,
+            SUM(CASE WHEN status = 0  THEN 1 ELSE 0 END) AS taskLate,
             SUM(CASE WHEN status IS NULL THEN 1 ELSE 0 END) AS taskPending,
             SUM(CASE WHEN type = 'Tugas' AND status = 1 THEN 1 ELSE 0 END) AS tugasTotal,
             SUM(CASE WHEN type = 'Kerja' AND status = 1 THEN 1 ELSE 0 END) AS kerjaTotal,
@@ -34,7 +38,7 @@ interface TaskDao {
             COUNT(*) AS taskTotal
         FROM Tasks
     """) // Hitung semua untuk stat
-    fun getStat(now: Long): Flow<Stat>
+    fun getStat(): Flow<Stat>
 
     @Query("""
         SELECT * FROM Tasks 

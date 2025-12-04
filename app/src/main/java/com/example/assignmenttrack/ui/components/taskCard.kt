@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AssignmentLate
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -145,6 +146,14 @@ fun TaskCard(task: Task, modifier: Modifier, taskListViewModel: TaskListViewMode
                                 expanded = false
                             },
                             leadingIcon = {Icon(imageVector = Icons.Default.Delete, tint = Color(0xFF456DEE), contentDescription = "Delete")}
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Late", color = Color(0xFF728FFC)) },
+                            onClick = {
+                                taskListViewModel.lateTask(task.id)
+                                expanded = false
+                            },
+                            leadingIcon = {Icon(imageVector = Icons.Default.AssignmentLate , tint = Color(0xFF456DEE), contentDescription = "Delete")}
                         )
                     }
                 }
